@@ -155,11 +155,18 @@ export default {
   methods: {
     add(){
       const newTicker={
-        name:this.ticker, 
-        price:"-",
+        name: this.ticker, 
+        price: "-",
         };
 
       this.tickers.push(newTicker);
+      setInterval(async () => {
+        const f = await fetch(
+          `https://min-api.cryptocompare.com/data/price?fsym=${newTicker.name}&tsyms=USD&api_key=34b9f3938a7e5aea90500bec6e673de72bad89eeaca42072e49bf54d640726ba`
+        );
+          const data = await f.json();
+        console.log(data);
+      }, 3000);
       this.ticker = null;  
     },
     
