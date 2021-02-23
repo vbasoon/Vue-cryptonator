@@ -52,7 +52,7 @@
           <div
           v-for="t in tickers"
           :key="t.name"
-          @click="sell = t"
+          @click="select(t)"
           :class="{
             'border-4': sell === t
           }"
@@ -96,9 +96,15 @@
           </h3>
           <div class="flex items-end border-gray-600 border-b border-l h-64">
             <div 
-              v-for="(bar, idx) in graph"
-              :key="idx" 
-            class="bg-green-800 border w-10 h-24">
+              v-for="(bar, idx) in normalizeGraph()"
+              :key="idx"
+              :style="{ height: `${bar}%`}" 
+              class="
+                bg-green-800 
+                border 
+                w-10 
+                "
+              >
               <!-- 
                -->
               
@@ -174,10 +180,23 @@ export default {
       }, 3000);
       this.ticker = "";  
     },
+
+    select(ticker) {
+      this.sell = ticker;
+      this.graph = [];
+    },
     
     remove(tickerToRemove){
       this.tickers=this.tickers.filter(t => t !== tickerToRemove);
     },
+
+    normalizeGraph() {
+      const maxValue = Math.max(...this.graph);
+      const minValue = Math.min(...this.graph);
+      return this.graph.map(
+        price => 5+((price - minValue) * 95) / (maxValue - minValue)
+      );
+    }
   }
 };
 
