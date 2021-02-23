@@ -95,13 +95,18 @@
             {{sell.name}} - USD
           </h3>
           <div class="flex items-end border-gray-600 border-b border-l h-64">
-            <div class="bg-purple-800 border w-10 h-24"></div>
-            <div class="bg-purple-800 border w-10 h-32"></div>
-            <div class="bg-purple-800 border w-10 h-48"></div>
-            <div class="bg-purple-800 border w-10 h-16"></div>
+            <div 
+              v-for="(bar, idx) in graph"
+              :key="idx" 
+            class="bg-green-800 border w-10 h-24">
+              <!-- 
+               -->
+              
+              </div>
+            
           </div>
           <button
-              @click="sell=null" 
+              @click="sell = null" 
               type="button" 
               class="absolute top-0 right-0"
           >
@@ -139,35 +144,35 @@ export default {
 
   data() {
     return{
-      ticker: "default",
-      tickers: [
-        {name: 'DEMO1', price: '10'},
-        {name: 'DEMO2', price: '20'},
-        {name: 'DEMO3', price: '30'},
-        {name: 'DEMO4', price: '40'},
-        {name: 'DEMO5', price: '50'},
-        {name: 'DEMO6', price: '60'}
-      ],
-      sell: null
+      ticker: "",
+      tickers: [],
+      sell: "",
+      graph: []
     }; 
   },
 
   methods: {
     add(){
-      const newTicker={
+      const currentTicker={
         name: this.ticker, 
         price: "-",
         };
 
-      this.tickers.push(newTicker);
+      this.tickers.push(currentTicker);
       setInterval(async () => {
         const f = await fetch(
-          `https://min-api.cryptocompare.com/data/price?fsym=${newTicker.name}&tsyms=USD&api_key=34b9f3938a7e5aea90500bec6e673de72bad89eeaca42072e49bf54d640726ba`
+          `https://min-api.cryptocompare.com/data/price?fsym=${currentTicker.name}&tsyms=USD&api_key=34b9f3938a7e5aea90500bec6e673de72bad89eeaca42072e49bf54d640726ba`
         );
           const data = await f.json();
-        console.log(data);
+
+          this.tickers.find(t => t.name === currentTicker.name).price = 
+          data.USD > 1 ? data.USD.toFixed(2) : data.USD.toPrecision(2);
+          //currentTicker.price = data.USD;
+          if (this.sell.name === currentTicker.name) {
+            this.graph.push(data.USD);
+          }
       }, 3000);
-      this.ticker = null;  
+      this.ticker = "";  
     },
     
     remove(tickerToRemove){
