@@ -11,7 +11,7 @@
                 class="block text-sm font-medium text-gray-700"
                 >Тикер {{ticker}}</label
               >
-              <div class="mt-1 relative rounded-md shadow-md">
+              <div class="mt-1 relative rounded-md shadow-md bg-red">
                 <input
                 v-model="ticker"
                 @keydown.enter="add"
@@ -202,6 +202,3 @@ export default {
 
 </script>
 
-<style src="./app.css">
-
-</style>
